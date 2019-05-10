@@ -1,0 +1,151 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1504\cocoasubrtf830
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww13200\viewh14000\viewkind0
+\pard\tx566\tx1133\tx1700\tx2267\tx2834\tx3401\tx3968\tx4535\tx5102\tx5669\tx6236\tx6803\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 R version 3.5.1 (2018-07-02) -- "Feather Spray"\
+Copyright (C) 2018 The R Foundation for Statistical Computing\
+Platform: x86_64-apple-darwin13.4.0 (64-bit)\
+\
+R is free software and comes with ABSOLUTELY NO WARRANTY.\
+You are welcome to redistribute it under certain conditions.\
+Type 'license()' or 'licence()' for distribution details.\
+\
+  Natural language support but running in an English locale\
+\
+R is a collaborative project with many contributors.\
+Type 'contributors()' for more information and\
+'citation()' on how to cite R or R packages in publications.\
+\
+Type 'demo()' for some demos, 'help()' for on-line help, or\
+'help.start()' for an HTML browser interface to help.\
+Type 'q()' to quit R.\
+\
+[Workspace loaded from ~/.RData]\
+\
+> library(readxl)\
+> exam <- read_excel("Desktop/University/exam.xlsx")\
+> View(exam)\
+> import.packges("neuralnet")\
+Error in import.packges("neuralnet") : \
+  could not find function "import.packges"\
+> install.packges("neuralnet")\
+Error in install.packges("neuralnet") : \
+  could not find function "install.packges"\
+> install.packages("neuralnet")\
+also installing the dependency \'91Deriv\'92\
+\
+trying URL 'https://cran.rstudio.com/src/contrib/Deriv_3.8.5.tar.gz'\
+Content type 'application/x-gzip' length 31958 bytes (31 KB)\
+==================================================\
+downloaded 31 KB\
+\
+trying URL 'https://cran.rstudio.com/src/contrib/neuralnet_1.44.2.tar.gz'\
+Content type 'application/x-gzip' length 27211 bytes (26 KB)\
+==================================================\
+downloaded 26 KB\
+\
+* installing *source* package \'91Deriv\'92 ...\
+** package \'91Deriv\'92 successfully unpacked and MD5 sums checked\
+** R\
+** inst\
+** byte-compile and prepare package for lazy loading\
+** help\
+*** installing help indices\
+** building package indices\
+** testing if installed package can be loaded\
+* DONE (Deriv)\
+* installing *source* package \'91neuralnet\'92 ...\
+** package \'91neuralnet\'92 successfully unpacked and MD5 sums checked\
+** R\
+** byte-compile and prepare package for lazy loading\
+** help\
+*** installing help indices\
+** building package indices\
+** testing if installed package can be loaded\
+* DONE (neuralnet)\
+\
+The downloaded source packages are in\
+	\'91/private/var/folders/mg/hct4mp0922g341dsrhmfwljw0000gn/T/RtmpeoZJFB/downloaded_packages\'92\
+Updating HTML index of packages in '.Library'\
+Making 'packages.html' ... done\
+> library(neuralnet)\
+> library(ggplot2)\
+> library(nnet)\
+> library(dplyr)\
+\
+Attaching package: \'91dplyr\'92\
+\
+The following object is masked from \'91package:neuralnet\'92:\
+\
+    compute\
+\
+The following objects are masked from \'91package:stats\'92:\
+\
+    filter, lag\
+\
+The following objects are masked from \'91package:base\'92:\
+\
+    intersect, setdiff, setequal, union\
+\
+> library(reshape2)\
+> set.seed(123)\
+> explor_data <- melt(exam)\
+Using CLASS as id variables\
+> explor_data %>%\
++ ggplot(aes(x=factor(variable),y=value))+ geom_violin()+ geom_jitter(height = 0, width = 0.1, aes(colour=CLASS),alpha=0.7)+theme_minimal()\
+> lables <- class.ind(as.factor(exam$CLASS))\
+> standarize <- function(x)\{(x-min(x))/(max(x)-min(x))\}\
+> exam[,1:6]<-lapply(exam[,1:6],standarize)\
+Error: Column indexes must be at most 3 if positive, not 4, 5, 6\
+Call `rlang::last_error()` to see a backtrace\
+> exam[,1:4]<-lapply(exam[,1:4],standarize)\
+Error: Column index must be at most 3 if positive, not 4\
+Call `rlang::last_error()` to see a backtrace\
+> exam[,1:3]<-lapply(exam[,1:3],standarize)\
+Error in x - min(x) : non-numeric argument to binary operator\
+> exam[,1:2]<-lapply(exam[,1:2],standarize)\
+> pre_process_exam <- cbind(exam[1,2],lables)\
+> f<-as.formula("Unowned+Owned~x+y")\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(16,12),act.fct = "tanh",liner.output=FALSE)\
+Error in neuralnet(f, data = pre_process_exam, hidden = c(16, 12), act.fct = "tanh",  : \
+  unused argument (liner.output = FALSE)\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(16,12),act.fct = "tanh",linear.output=FALSE)\
+Error in `[.data.frame`(data, , model.list$variables) : \
+  undefined columns selected\
+> f<-as.formula("Unowned+Owned~X+Y")\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(16,12),act.fct = "tanh",linear.output=FALSE)\
+Error in `[.data.frame`(data, , model.list$variables) : \
+  undefined columns selected\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(10,12),act.fct = "tanh",linear.output=FALSE)\
+Error in `[.data.frame`(data, , model.list$variables) : \
+  undefined columns selected\
+> f<-as.formula(" CLASS ~ X + Y")\
+> \
+> f<-as.formula(" CLASS ~ X + Y")\
+> \
+> f<-as.formula(" CLASS ~ X + Y")\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(10,12),act.fct = "tanh",linear.output=FALSE)\
+Error in eval(predvars, data, env) : object 'CLASS' not found\
+> f <- as.formula ("Owned + Unowned ~ X + Y ")\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(10,12),act.fct = "tanh",linear.output=FALSE)\
+Error in `[.data.frame`(data, , model.list$variables) : \
+  undefined columns selected\
+> exam_net<- neuralnet(f$CLASS,data=pre_process_exam,hidden=c(10,12),act.fct = "tanh",linear.output=FALSE)\
+Error: Missing 'formula' argument.\
+> pre_process_exam <- cbind(exam[,1,2],lables)\
+> f <- as.formula ("Owned + Unowned ~ X + Y ")\
+> pre_process_exam <- cbind(exam[,1:2],lables)\
+> f <- as.formula ("Owned + Unowned ~ X + Y ")\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(10,12),act.fct = "tanh",linear.output=FALSE)\
+> plot(exam_net)\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(12),act.fct = "tanh",linear.output=FALSE)\
+> plot(exam_net)\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(5,5),act.fct = "tanh",linear.output=FALSE)\
+> plot(exam_net)\
+> exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(5),act.fct = "tanh",linear.output=FALSE)\
+> plot(exam_net)\
+ exam_net<- neuralnet(f,data=pre_process_exam,hidden=c(3),act.fct = "tanh",linear.output=FALSE)\
+plot(exam_net)}
